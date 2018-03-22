@@ -28,7 +28,7 @@ int   getshm(int id){
 }
 
 void* map(int id){
-    void*addr = shmat(id, NULL, 0);
+    void* addr = shmat(id, NULL, 0);
     if(addr==(void*)-1){
         safeperror("No se pudo mapear la memoria");
         exit(-1);

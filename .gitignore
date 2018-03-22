@@ -40,3 +40,8 @@
 *.launch
 .settings/
 *.sublime-workspace
+
+
+*.cmake
+CMakeFiles/
+CMakeCache.txt

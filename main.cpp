@@ -11,10 +11,10 @@ int main() {
     int cola_recep, cola_envia;
 
     //Shared memory
-    int shm = creashm(0, sizeof(int) * 2);
+    int shm = creashm(7574, 2 * sizeof(int));
     int *memoria = (int *) map(shm);
     memoria[0] = MAX_PEOPLE;
-    memoria[1] = 0;
+    memoria[1] = 0; // Cantidad de gente actualmente en el museo
 
     /*
     //Crear sem
@@ -31,6 +31,6 @@ int main() {
         }
     }
 */
-    std::cout << "Hello, World!" << std::endl;
+    std::cout << "Hello, World!" << std::endl;///
     return 0;
 }
