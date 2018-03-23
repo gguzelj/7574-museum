@@ -48,7 +48,7 @@ static void build_log_message(char *buffer){
     sprintf(buffer, "%s", colors[_color]);
     sprintf(buffer+strlen(buffer), "%s[", PROCESS_NAME);
     sprintf(buffer+strlen(buffer), "%i]:", pid);
-    
+
     if(strlen(buffer)<FIRST_COLUMN){
         space[FIRST_COLUMN-strlen(buffer)]=0;
         sprintf(buffer+strlen(buffer), "%s", space);
@@ -103,4 +103,3 @@ void init_logger(const char* pname, int color){
 
 
 #endif /* _LOGGER_H_ */
-

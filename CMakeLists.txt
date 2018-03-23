@@ -7,7 +7,7 @@ add_executable(main main.cpp
         include/logger.h include/measure.h include/resources.h include/msg.h include/semaforo.h include/shm.h mensaje.h)
 
 
-add_executable(person persona.cpp
+add_executable(persona persona.cpp
         include/logger.h include/measure.h include/resources.h include/msg.h include/semaforo.h include/shm.h)
 
 

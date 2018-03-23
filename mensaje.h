@@ -7,14 +7,18 @@
 
 #include <iostream>
 
+int MAX_PEOPLE = 100;
+int MAX_PUERTA = 3;
+
 struct Mensaje {
     long mtype;
     long person_id;
     bool enter;
     bool accepted;
 
-    Mensaje() {
-        memset((void *) person_id, 0, sizeof(person_id));
+    Mensaje(long id) {
+        person_id = id;
+        ///memset((void *) person_id, 0, sizeof(person_id));
     }
 };
 
