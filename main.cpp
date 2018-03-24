@@ -22,8 +22,9 @@ int main() {
     inisem(sem, 0);
 
     // Crear semáforo para empezar a generar personas
-    int semGen = creasem(1);
-    inisem(semGen, 0);
+    // int semGen = creasem(1);
+    // inisem(semGen, 0);
+    /// No puedo crear un segundo semáforo...
 
     for (int i = 0; i < MAX_PUERTA; i++) {
         cola_recep = 2 * i;
@@ -38,7 +39,7 @@ int main() {
     }
 
     // No deberían generarse personas hasta q las puertas hayan creado sus colas
-    sleep(3);
+    sleep(1);///p(semGen);
 
     // Generador de personas
     for (int i = 0; i < 10; i++) {

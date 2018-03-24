@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <iostream>
+#include <fstream>
 
 #define KNRM  0
 #define KRED  1
@@ -34,6 +36,7 @@ char const *colors[] = {"\e[00m","\e[31m", "\e[32m", "\e[33m",
                         "\e[94m", "\e[95m", "\e[96m", "\e[97m"};
 
 static char PROCESS_NAME[100];
+static std::ofstream LOGFILE;
 int _color=0;
 
 #define FIRST_COLUMN 32
@@ -86,6 +89,12 @@ void safeperror(const char* format, ...){
     va_end(args);
 
     write(fileno(stdout), buffer, strlen(buffer));
+
+    char file_name[100];
+    sprintf(file_name, "%s.log", PROCESS_NAME);
+    LOGFILE.open(file_name);//Para ponerlos en un mismo archivo ("museum.log") hace falta un sem
+    LOGFILE << buffer << std::endl;
+    LOGFILE.close();
 }
 
 static void exit_message(void){

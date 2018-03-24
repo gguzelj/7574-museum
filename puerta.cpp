@@ -8,8 +8,10 @@
 unsigned int getRand();
 
 int main(int argc, char *argv[]) {
-    init_logger(argv[0] + getpid(), getpid());
-    log_exit();
+    char proc_name[100];
+    sprintf(proc_name, "%s%d", argv[0], getpid());
+    init_logger(proc_name, getpid());
+    //log_exit();
 
     if (argc < 3)
         return -1;
