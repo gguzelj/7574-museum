@@ -8,33 +8,42 @@
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
+    std::cout << "----- INAUGURAMOS MUSEO -----" << std::endl;
 
-    int cola_recep, cola_envia, puerta;
+    int cola_resp, cola_solic, puerta;
 
     // Memoria compartida
     int shm = creashm(7574, 2 * sizeof(int));
     int *memoria = (int *) map(shm);
     memoria[0] = floor(CANT_PERSONAS / 10);
     memoria[1] = 0; // Cantidad de gente actualmente en el museo
-    memoria[2] = 0; // Puertas inicializadas
+    memoria[3] = 0; // Personas esperando por un guía
 
     // Crear semáforo de memoria compartida
     int sem = creasem(0);
-    inisem(sem, 0);
+    inisem(sem, 1);
 
-    // Crear semáforo para empezar a generar personas
-    //int semGen = creasem(1);
-    //inisem(semGen, 0);
-    /// No puedo crear un segundo semáforo...
+    // Crear semáforo de guía
+    int semGuia = creasem(GUIDE_SEM_ID);
+    inisem(semGuia, 0);
+
+    // Inicio al guía
+    if (fork() == 0) {
+        execl("./guide", "./guide", (char *) NULL);
+        exit(0);
+    }
 
     for (int i = 0; i < CANT_PUERTAS; i++) {
-        cola_recep = 2 * i;
-        cola_envia = 2 * i + 1;
+        cola_resp = 2 * i;
+        cola_solic = 2 * i + 1;
+        // Creamos las colas para cada puerta
+        int respuesta_queue = creamsg(cola_resp);
+        int solicitud_queue = creamsg(cola_solic);
 
         if (fork() == 0) {
             std::cout << "Puerta " << i << " con pid " << getpid() << std::endl;//
             int ret = execl("./puerta", "./puerta",
-                std::to_string(cola_recep), std::to_string(cola_envia),
+                std::to_string(cola_resp), std::to_string(cola_solic),
                 (char *) NULL);
             if (ret == -1) {
                 perror("Error puerta " + i);
@@ -43,20 +52,16 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // No deberían generarse personas hasta q las puertas hayan creado sus colas
-    sleep(1);
-    ///p(semGen);
-
     // Generador de personas
     for (int i = 0; i < CANT_PERSONAS; i++) {
         puerta = rand() % CANT_PUERTAS;
-        cola_recep = 2 * puerta;
-        cola_envia = 2 * puerta + 1;
+        cola_resp = 2 * puerta;
+        cola_solic = 2 * puerta + 1;
 
         if (fork() == 0) {
             std::cout << "Persona " << i << " con pid " << getpid() << " a puerta " << puerta << std::endl;//
             int ret = execl("./persona", "./persona",
-                std::to_string(cola_recep), std::to_string(cola_envia),
+                std::to_string(cola_resp), std::to_string(cola_solic),
                 (char *) NULL);
             if (ret == -1) {
                 perror("Error persona " + i);

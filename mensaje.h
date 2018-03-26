@@ -7,8 +7,13 @@
 
 #include <iostream>
 
-int CANT_PERSONAS = 300;
+int CANT_PERSONAS = 30;
 int CANT_PUERTAS = 3;
+
+int GUIDE_SEM_ID = 9;
+int GUIDE_QUEUE_ID = 6;
+int PERSONAS_POR_GUIA = 5;
+int GUIDE_INTERVAL = 2; // Representa 30 minutos
 
 struct Mensaje {
     long mtype;

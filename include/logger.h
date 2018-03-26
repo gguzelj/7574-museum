@@ -81,9 +81,9 @@ void safelog(const char* format, ...){
 }
 
 void safeperror(const char* format, ...){
-  int error = errno;
-  char buffer[2048];
-  build_log_message(buffer);
+    int error = errno;
+    char buffer[2048];
+    build_log_message(buffer);
 
     va_list args;
     va_start(args, format);
