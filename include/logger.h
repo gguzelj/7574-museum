@@ -72,6 +72,12 @@ void safelog(const char* format, ...){
 
     va_end(args);
     write(fileno(stdout), buffer, strlen(buffer));
+
+    // char file_name[100];
+    // sprintf(file_name, "%s.log", PROCESS_NAME);
+    // LOGFILE.open(file_name);//Para ponerlos en un mismo archivo ("museum.log") hace falta un sem
+    // LOGFILE << buffer << std::endl;
+    // LOGFILE.close();
 }
 
 void safeperror(const char* format, ...){
@@ -89,12 +95,6 @@ void safeperror(const char* format, ...){
     va_end(args);
 
     write(fileno(stdout), buffer, strlen(buffer));
-
-    char file_name[100];
-    sprintf(file_name, "%s.log", PROCESS_NAME);
-    LOGFILE.open(file_name);//Para ponerlos en un mismo archivo ("museum.log") hace falta un sem
-    LOGFILE << buffer << std::endl;
-    LOGFILE.close();
 }
 
 static void exit_message(void){

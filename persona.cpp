@@ -2,17 +2,18 @@
 #include "include/msg.h"
 #include "include/logger.h"
 #include "mensaje.h"
+#include <time.h>
 
 unsigned int getRand();
 
 int main(int argc, char *argv[]) {
-    char proc_name[100];
-    sprintf(proc_name, "%s%d", argv[0], getpid());
-    init_logger(proc_name, getpid());
-    //log_exit();
+    init_logger(argv[0], getpid());
+    log_exit();
 
-    if (argc < 3)
+    if (argc < 3) {
+        safeperror("Persona con menos argumentos que los necesarios.\n");
         return -1;
+    }
     int receive_queue_id = atoi(argv[1]);
     int send_queue_id = atoi(argv[2]);
 
@@ -26,10 +27,10 @@ int main(int argc, char *argv[]) {
     m.enter = true;
     m.accepted = true;
     // Pido entrar
-    safelog("Pido entrar");
+    safelog("Pido entrar\n");
     enviarmsg(send_queue, &m, sizeof(m));
     // Espero respuesta
-    safelog("Espero respuesta");
+    safelog("Espero respuesta\n");
     recibirmsg(receive_queue, &m, sizeof(m), 1);
 
     if (m.accepted) {
@@ -37,25 +38,25 @@ int main(int argc, char *argv[]) {
         if (m.person_id != getpid()) {
             safeperror(m.person_id + " != " + getpid());
         }
-        safelog("Fui aceptado. Entro y paseo");
+        safelog("Fui aceptado. Entro y paseo\n");
 
         //Simulo el paseo en el museo
         sleep(getRand());
 
         //Pido salir del museo
-        safelog("Pido salir");
+        safelog("Pido salir\n");
         m.enter = false;
         enviarmsg(send_queue, &m, sizeof(m));
-        safelog("Espero respuesta para salir");
+        safelog("Espero respuesta para salir\n");
         recibirmsg(receive_queue, &m, sizeof(m), 1);
     } else {
-        safelog("Fui rechazado");
+        safelog("Fui rechazado\n");
     }
 
-    safelog("Me voy a casa");
+    safelog("Me voy a casa\n");
     return 0;
 }
 
 unsigned int getRand() {
-    return (unsigned int) rand() % 1000;
+    return (unsigned int) rand() % 3000;
 }

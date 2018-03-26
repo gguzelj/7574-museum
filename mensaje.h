@@ -7,8 +7,8 @@
 
 #include <iostream>
 
-int MAX_PEOPLE = 100;
-int MAX_PUERTA = 3;
+int CANT_PERSONAS = 300;
+int CANT_PUERTAS = 3;
 
 struct Mensaje {
     long mtype;

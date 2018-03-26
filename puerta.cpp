@@ -4,23 +4,25 @@
 #include "include/semaforo.h"
 #include "include/logger.h"
 #include "mensaje.h"
+#include <time.h>
 
 unsigned int getRand();
 
 int main(int argc, char *argv[]) {
-    char proc_name[100];
-    sprintf(proc_name, "%s%d", argv[0], getpid());
-    init_logger(proc_name, getpid());
-    //log_exit();
+    init_logger(argv[0], getpid());
+    log_exit();
 
-    if (argc < 3)
+    if (argc < 3) {
+        std::cerr << "¡Cantidad de argumentos incorrecta!" << std::endl;//
+        safeperror("Cantidad de argumentos incorrecta.");
         return -1;
+    }
     int receive_queue_id = atoi(argv[1]);
     int send_queue_id = atoi(argv[2]);
 
     // Creamos la memoria compartida
     int shm = getshm(7574);
-    int *memoria = (int *) map(shm); //[0]: cant_max, [1]: cant_actual
+    int *memoria = (int *) map(shm); // [0]: cant_max, [1]: cant_actual
     // Semáforo para acceder a la memoria compartida
     int sem = getsem(0);
     int semGen = getsem(1);
@@ -30,7 +32,7 @@ int main(int argc, char *argv[]) {
     int send_queue = creamsg(send_queue_id);
 
     p(sem); {
-        if (memoria[2]++ == MAX_PUERTA) {
+        if (memoria[2]++ == CANT_PUERTAS) {
             v(semGen);
         }
     } v(sem);
@@ -46,7 +48,7 @@ int main(int argc, char *argv[]) {
             sleep(getRand());
 
             p(sem); {
-                if (m.accepted = memoria[1] <= memoria[0]) {
+                if (m.accepted = memoria[1] < memoria[0]) {
                     memoria[1]++;
                     safelog("Lo dejo entrar. Cantidad actual: " + memoria[1]);
                 }
@@ -71,5 +73,7 @@ int main(int argc, char *argv[]) {
 }
 
 unsigned int getRand() {
-    return (unsigned int) rand() % 100;
+    unsigned int siesta = rand() % 4000;
+    safelog("Siesta :" + siesta);//
+    return siesta;
 }
