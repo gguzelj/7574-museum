@@ -30,7 +30,14 @@
 *.exe
 *.out
 *.app
+*.cbp
 
+#Cmake
+cmake-build-debug/
+CMakeFiles
+*.cmake
+CMakeCache.txt
+Makefile
 
 # IDEs and editors
 .idea

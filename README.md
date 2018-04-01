@@ -7,3 +7,9 @@ Simple exercise to practice IPC basics
 cmake .
 make
 ```
+
+# Run
+
+```bash
+./main
+```

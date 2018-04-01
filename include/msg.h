@@ -8,34 +8,34 @@
 #include "logger.h"
 #include "resources.h"
 
-int creamsg(int id){
+int create_msg(int id){
     key_t clave;
     clave = ftok(DIRECTORY, id);
     return (msgget(clave,  IPC_CREAT | IPC_EXCL | 0660));
     /* da error si ya existe */
 }
 
-int getmsg(int id){
+int get_msg(int id){
     key_t clave;
     clave = ftok(DIRECTORY, id);
     return (msgget(clave, 0660));
 }
 
-void enviarmsg(int id, const void *msgp, size_t msgsz){
+void send_msg(int id, const void *msgp, size_t msgsz){
     if(msgsnd(id,msgp,msgsz-sizeof(long),0)==-1){
-        safeperror("No se puede enviar el mensaje");
+        safeperror("Can not send message");
         exit(-1);
     }
 }
 
-void recibirmsg(int id, void *msgp, size_t msgsz, long type){
+void receive_msg(int id, void *msgp, size_t msgsz, long type){
     if(msgrcv(id,msgp,msgsz-sizeof(long),type,0)==-1){
-        safeperror("No se puede recibir el mensaje");
+        safeperror("Can not receive message");
         exit(-1);
     }
 }
 
-int   elimsg(int id){
+int remove_msg(int id){
     return (msgctl(id, IPC_RMID, NULL));
 }
 

@@ -8,20 +8,14 @@
 #include "logger.h"
 #include "resources.h"
 
-int   getshm(int);
-int   creashm(int,int);
-void* map(int);
-int   unmap(void*);
-int   elishm(int);
-
-int   creashm(int id, int size){
+int create_shm(int id, int size){
     key_t clave;
     clave = ftok(DIRECTORY, id);
     return (shmget(clave, size, IPC_CREAT | IPC_EXCL | 0660));
     /* da error si ya existe */
 }
 
-int   getshm(int id){
+int get_shm(int id){
     key_t clave;
     clave = ftok(DIRECTORY, id);
     return (shmget(clave, 1, 0660));
@@ -36,11 +30,11 @@ void* map(int id){
     return addr;
 }
 
-int   unmap(void* addr){
+int unmap(void* addr){
     return shmdt(addr);
 }
 
-int   elishm(int id){
+int remove_shm(int id){
     return (shmctl(id, IPC_RMID, (struct shmid_ds *) 0));
 }
 

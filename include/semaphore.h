@@ -9,26 +9,20 @@
 #include "resources.h"
 
 
-/* Funciones de semaforos crear el set de semaforos (si no existe)
- */
-int creasem(int identif) {
+int create_sem(int identif) {
 	key_t clave;
 	clave = ftok(DIRECTORY, identif);
 	return (semget(clave, 1, IPC_CREAT | IPC_EXCL | 0660));
 	/* da error si ya existe */
 }
 
-/* adquirir derecho de acceso al set de semaforos existentes
- */
-int getsem(int identif) {
+int get_sem(int identif) {
 	key_t clave;
 	clave = ftok(DIRECTORY, identif);
 	return (semget(clave, 1, 0660));
 }
 
-/* inicializar al semáforo del set de semaforos
- */
-int inisem(int semid, int val) {
+int init_sem(int semid, int val) {
 	union semun {
 		int val;
 		/* Value for SETVAL */
@@ -41,7 +35,8 @@ int inisem(int semid, int val) {
 	return (semctl(semid, 0, SETVAL, arg));
 }
 
-/* ocupar al semáforo (p) WAIT
+/**
+ * WAIT
  */
 int p(int semid) {
 	struct sembuf oper;
@@ -52,14 +47,15 @@ int p(int semid) {
 	oper.sem_flg = 0;
 
 	if(semop(semid, &oper, 1)!=0){
-	  safeperror("No se pudo hacer P del semáforo");
+	  safeperror("can not release sem");
 	  exit(-1);
 	}
 
 	return 1;
 }
 
-/* liberar al semáforo (v) SIGNAL
+/**
+ * SIGNAL
  */
 int v(int semid) {
 	struct sembuf oper;
@@ -69,15 +65,13 @@ int v(int semid) {
 	/* v(sem) */
 	oper.sem_flg = 0;
 	if(semop(semid, &oper, 1)!=0){
-	  safeperror("No se pudo hacer V del semáforo");
+	  safeperror("can not acquire sem");
 	  exit(-1);
 	}
 	return 1;
 }
 
-/* eliminar el set de semaforos
- */
-int elisem(int semid) {
+int remove_sem(int semid) {
 	return (semctl(semid, 0, IPC_RMID, (struct semid_ds *) 0));
 }
 
